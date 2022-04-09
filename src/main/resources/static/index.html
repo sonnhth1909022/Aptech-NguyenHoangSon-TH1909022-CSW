@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <style>
+        table {
+            font-family: arial, sans-serif;
+            border-collapse: collapse;
+            width: 100%;
+        }
+
+        td, th {
+            border: 1px solid #dddddd;
+            text-align: left;
+            padding: 8px;
+        }
+
+        tr:nth-child(even) {
+            background-color: #dddddd;
+        }
+    </style>
+</head>
+<body onload="loadUsers()">
+
+<h2>HTML Table</h2>
+
+<table id="productsList">
+
+</table>
+
+<form action="#">
+    <input id="name" placeholder="Product name">
+    <input id="price" placeholder="Product price">
+    <input id="quantity" placeholder="Product quantity">
+    <button onclick="createProduct()">Create product</button>
+</form>
+
+
+<script>
+
+
+    function createProduct() {
+        let productName = document.getElementById("name").value;
+        let productPrice = document.getElementById("price").value;
+        let productQuantity = document.getElementById("quantity").value;
+
+        let xmlHttp = new XMLHttpRequest();   // new HttpRequest instance
+        xmlHttp.open("POST", "http://localhost:8080/api/v1.0/product/add");
+        xmlHttp.setRequestHeader("Content-Type", "application/json");
+        xmlHttp.send(JSON.stringify({name: productName, price: productPrice, quantity: productQuantity}));
+
+        loadUsers();
+    }
+
+    function loadUsers() {
+        let xHttp = new XMLHttpRequest();
+        xHttp.onreadystatechange = function () {
+            if (this.readyState == 4 && this.status == 200) {
+                let products = JSON.parse(this.responseText);
+                let html = '<tr>\n' +
+                    '        <th>Product id</th>\n' +
+                    '        <th>Product name</th>\n' +
+                    '        <th>Product price</th>\n' +
+                    '        <th>Product quantity</th>\n' +
+                    '    </tr>';
+                for (let i = 0; i < products.length; i++) {
+                    let product = products[i];
+                    console.log(product);
+                    html = html + '<tr><td>' + product.id + '</td>\n' +
+                        '        <td>' + product.name + '</td>\n' +
+                        '        <td>' + product.price + '</td>\n' +
+                        '        <td>' + product.quantity + '</td>' +
+                        '        </tr>';
+
+                }
+                document.getElementById("productsList").innerHTML = html;
+            }
+        };
+        xHttp.open("GET", "http://localhost:8080/api/v1.0/product/list", true);
+        xHttp.send();
+    }
+
+    loadUsers();
+</script>
+</body>
+</html>
