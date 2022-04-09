@@ -12,10 +12,10 @@ import javax.validation.constraints.NotNull;
 @ToString
 public class ProductDto {
 
-    @NotBlank(message = "name must not be blank!")
+    @NotBlank(message = "Tên không được để trống!")
     private String name;
-    @NotNull(message = "price must not be null!")
+    @NotNull(message = "Giá không được null!")
     private double price;
-    @NotNull(message = "quantity must not be null!")
+    @NotNull(message = "Số lượng không được null!")
     private int quantity;
 }
